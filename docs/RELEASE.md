@@ -6,7 +6,7 @@
 |---|---|
 | Versi aplikasi | `1.0.0` |
 | Schema Dexie | `2` |
-| Target rilis | Static hosting HTTPS (Cloudflare Pages default) |
+| Target rilis | Static hosting HTTPS (Cloudflare Workers default) |
 | Status | **Release candidate** — otomasi lulus; UAT perangkat dan sign-off product owner masih menunggu |
 | Tanggal pemeriksaan | 27 Oktober 2026 |
 | Panduan deploy | `docs/DEPLOY.md` |
@@ -26,7 +26,7 @@
 - [x] E2E produksi: manifest, ikon, service worker aktif, reload offline, dan transaksi offline.
 - [x] Manifest `standalone`, ikon 192/512/maskable/apple-touch, shortcut Penjualan/Pembelian.
 - [x] Route lazy-load; chunk utama ±140 kB (sebelumnya >500 kB).
-- [x] `_redirects` dan `_headers` tersedia di `dist`.
+- [x] `wrangler.jsonc` SPA fallback dan `_headers` tersedia di `dist`.
 - [x] Kontras teks, target sentuh, focus trap bottom sheet, safe area, dan reduced motion.
 - [x] Lighthouse performance 96, accessibility 100, best practices 100, SEO 100.
 
@@ -52,6 +52,8 @@
 | E2E dev | `npm run test:e2e -- --workers=1` | 30 test lulus | 2026-10-27 |
 | E2E produksi PWA | `npm run test:e2e:pwa` | 1 test lulus — manifest, SW, offline, transaksi offline | 2026-10-27 |
 | PWA artifact | `npm run check:pwa` | Lulus | 2026-10-27 |
+| Deploy config | `npx wrangler deploy --dry-run` | Lulus — 115 asset dibaca, konfigurasi valid | 2026-10-27 |
+| SPA fallback | `npx wrangler dev` | `/lainnya/uat` mengembalikan `200 text/html` | 2026-10-27 |
 | Build | `npm run build` | Lulus | 2026-10-27 |
 
 Catatan:
@@ -168,7 +170,7 @@ Uji minimal satu perangkat Android dan satu perangkat iOS. Isi versi OS/browser 
 
 - [x] `docs/USER-GUIDE.md` tersedia dan dapat dibuka dari aplikasi.
 - [x] `docs/UAT.md` dan runner UAT tersedia.
-- [x] `docs/DEPLOY.md` memuat Cloudflare Pages, Netlify, static hosting, dan rollback.
+- [x] `docs/DEPLOY.md` memuat Cloudflare Workers, Netlify, static hosting, dan rollback.
 - [ ] Checklist backup mingguan disosialisasikan.
 - [ ] Kontak bantuan diisi.
 - [ ] Sign-off product owner, developer, QA/UAT.
@@ -181,7 +183,7 @@ Data pengguna tersimpan di IndexedDB perangkat. Rollback aplikasi tidak menghapu
 
 ### 6.1 Rollback cepat (hosting)
 
-1. Buka Cloudflare Pages → Deployments (atau panel hosting).
+1. Buka Cloudflare Workers → Deployments (atau panel hosting).
 2. Pilih deployment stabil terakhir.
 3. Jalankan **Rollback**.
 4. Verifikasi manifest, service worker, dan halaman utama.

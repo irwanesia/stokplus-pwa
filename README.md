@@ -54,7 +54,7 @@ Sudah ada:
 - Banner mode offline dan notifikasi siap offline.
 - Panduan pengguna di dalam aplikasi dan `docs/USER-GUIDE.md`.
 - UAT runner 15 skenario + sign-off di `/lainnya/uat` dan `docs/UAT.md`.
-- Deploy statis Cloudflare Pages/Netlify dengan `_redirects` dan `_headers`.
+- Deploy statis Cloudflare Workers/Netlify dengan konfigurasi SPA fallback dan `_headers`.
 - Dokumentasi rilis dan rollback.
 - Dokumentasi developer.
 
@@ -83,24 +83,25 @@ npx playwright install chromium
 
 ## Commands
 
-| Command                   | Fungsi                                                                 |
-| ------------------------- | ---------------------------------------------------------------------- |
-| `npm run dev`             | Jalankan dev server Vite.                                              |
-| `npm run build`           | Typecheck lalu build produksi + service worker.                        |
-| `npm run preview`         | Preview build produksi di port 4173.                                   |
-| `npm run lint`            | ESLint.                                                                |
-| `npm run lint:fix`        | ESLint dengan auto-fix.                                                |
-| `npm run format`          | Prettier.                                                              |
-| `npm run format:check`    | Cek format tanpa menulis.                                              |
-| `npm run typecheck`       | `vue-tsc` untuk app dan config.                                        |
-| `npm run test:unit`       | Unit test Vitest.                                                      |
-| `npm run test:unit:watch` | Unit test mode watch.                                                  |
-| `npm run test:e2e`        | Playwright E2E (menjalankan dev server otomatis).                      |
-| `npm run test:e2e:pwa`    | E2E produksi: manifest, service worker, offline, transaksi offline.    |
-| `npm run test:e2e:all`    | Semua E2E dev + produksi PWA.                                          |
-| `npm run check:pwa`       | Validasi manifest, ikon, `_redirects`, `_headers`, dan service worker. |
-| `npm run release:check`   | `check` + seluruh E2E.                                                 |
-| `npm run check`           | Lint + typecheck + unit test + build + PWA check.                      |
+| Command                   | Fungsi                                                                     |
+| ------------------------- | -------------------------------------------------------------------------- |
+| `npm run dev`             | Jalankan dev server Vite.                                                  |
+| `npm run build`           | Typecheck lalu build produksi + service worker.                            |
+| `npm run preview`         | Preview build produksi di port 4173.                                       |
+| `npm run lint`            | ESLint.                                                                    |
+| `npm run lint:fix`        | ESLint dengan auto-fix.                                                    |
+| `npm run format`          | Prettier.                                                                  |
+| `npm run format:check`    | Cek format tanpa menulis.                                                  |
+| `npm run typecheck`       | `vue-tsc` untuk app dan config.                                            |
+| `npm run test:unit`       | Unit test Vitest.                                                          |
+| `npm run test:unit:watch` | Unit test mode watch.                                                      |
+| `npm run test:e2e`        | Playwright E2E (menjalankan dev server otomatis).                          |
+| `npm run test:e2e:pwa`    | E2E produksi: manifest, service worker, offline, transaksi offline.        |
+| `npm run test:e2e:all`    | Semua E2E dev + produksi PWA.                                              |
+| `npm run check:pwa`       | Validasi manifest, ikon, `wrangler.jsonc`, `_headers`, dan service worker. |
+| `npm run deploy`          | Deploy ke Cloudflare Workers via Wrangler.                                 |
+| `npm run release:check`   | `check` + seluruh E2E.                                                     |
+| `npm run check`           | Lint + typecheck + unit test + build + PWA check.                          |
 
 ---
 
@@ -375,7 +376,7 @@ Hasil terakhir: **32 file / 121 unit test lulus**, **30 E2E dev + 1 E2E produksi
 - [`docs/PROGRESS.md`](docs/PROGRESS.md) — ringkasan implementasi per fase.
 - [`docs/UAT.md`](docs/UAT.md) — skrip dan sign-off UAT.
 - [`docs/USER-GUIDE.md`](docs/USER-GUIDE.md) — panduan pengguna.
-- [`docs/DEPLOY.md`](docs/DEPLOY.md) — deploy Cloudflare Pages/Netlify dan rollback.
+- [`docs/DEPLOY.md`](docs/DEPLOY.md) — deploy Cloudflare Workers/Netlify dan rollback.
 - [`docs/RELEASE.md`](docs/RELEASE.md) — checklist rilis, Lighthouse, matriks perangkat, dan keputusan rilis.
 - [`src/domain/README.md`](src/domain/README.md) — rencana aturan bisnis murni.
 

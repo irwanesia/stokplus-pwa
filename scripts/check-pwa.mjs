@@ -23,6 +23,69 @@ function read(path) {
   return readFileSync(path)
 }
 
+function parseJsonc(text) {
+  let result = ''
+  let inString = false
+  let escaped = false
+  let inLineComment = false
+  let inBlockComment = false
+
+  for (let index = 0; index < text.length; index += 1) {
+    const character = text[index]
+    const next = text[index + 1]
+
+    if (inLineComment) {
+      if (character === '\n') {
+        inLineComment = false
+        result += character
+      }
+      continue
+    }
+
+    if (inBlockComment) {
+      if (character === '*' && next === '/') {
+        inBlockComment = false
+        index += 1
+      }
+      continue
+    }
+
+    if (inString) {
+      result += character
+      if (escaped) {
+        escaped = false
+      } else if (character === '\\') {
+        escaped = true
+      } else if (character === '"') {
+        inString = false
+      }
+      continue
+    }
+
+    if (character === '"') {
+      inString = true
+      result += character
+      continue
+    }
+
+    if (character === '/' && next === '/') {
+      inLineComment = true
+      index += 1
+      continue
+    }
+
+    if (character === '/' && next === '*') {
+      inBlockComment = true
+      index += 1
+      continue
+    }
+
+    result += character
+  }
+
+  return JSON.parse(result.replace(/,\s*([}\]])/g, '$1'))
+}
+
 function pngSize(path) {
   const buffer = read(path)
   if (!buffer) {
@@ -123,9 +186,39 @@ if (swBuffer && !swBuffer.toString('utf8').includes('precacheAndRoute')) {
   fail('sw.js tidak berisi precache Workbox')
 }
 
-const redirectsBuffer = read(join(dist, '_redirects'))
-if (redirectsBuffer && !redirectsBuffer.toString('utf8').includes('/index.html')) {
-  fail('_redirects tidak mengarahkan SPA ke /index.html')
+const wranglerBuffer = read(join(root, 'wrangler.jsonc'))
+if (wranglerBuffer) {
+  let wrangler
+
+  try {
+    wrangler = parseJsonc(wranglerBuffer.toString('utf8'))
+  } catch {
+    fail('wrangler.jsonc bukan JSON/JSONC valid')
+  }
+
+  if (wrangler) {
+    if (wrangler.name !== 'stokplus-pwa') {
+      fail(`wrangler.jsonc name harus "stokplus-pwa", ditemukan "${wrangler.name}"`)
+    }
+
+    const assets = wrangler.assets ?? {}
+    if (assets.directory !== './dist') {
+      fail(`wrangler.jsonc assets.directory harus "./dist", ditemukan "${assets.directory}"`)
+    }
+
+    if (assets.not_found_handling !== 'single-page-application') {
+      fail('wrangler.jsonc assets.not_found_handling harus "single-page-application"')
+    }
+  }
+}
+
+for (const redirectsPath of [join(root, 'public', '_redirects'), join(dist, '_redirects')]) {
+  if (existsSync(redirectsPath)) {
+    fail(
+      `File ${redirectsPath.replace(`${root}/`, '')} tidak boleh ada untuk deploy Cloudflare Workers; ` +
+        'gunakan not_found_handling di wrangler.jsonc.',
+    )
+  }
 }
 
 const headersBuffer = read(join(dist, '_headers'))
@@ -167,4 +260,4 @@ if (failures.length > 0) {
   process.exit(1)
 }
 
-console.log('OK    Manifest, ikon, index.html, dan service worker valid.')
+console.log('OK    Manifest, ikon, index.html, service worker, wrangler config, dan headers valid.')

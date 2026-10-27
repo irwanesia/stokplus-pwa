@@ -4,7 +4,7 @@ Catatan progres per fase. Dokumen ini melengkapi `docs/PHASES.md`: `PHASES.md` t
 
 | Item | Nilai |
 |---|---|
-| Versi dokumen | 1.5 |
+| Versi dokumen | 1.6 |
 | Tanggal | 27 Oktober 2026 |
 | Status proyek | Phase 12 — Review (menunggu UAT perangkat dan sign-off) |
 | PRD acuan | `docs/PRD.md` v2.1 |
@@ -466,7 +466,7 @@ Catatan progres per fase. Dokumen ini melengkapi `docs/PHASES.md`: `PHASES.md` t
 - UAT runner 15 skenario + skor + sign-off di `/lainnya/uat`, tersimpan di `localStorage`.
 - Route lazy-load kecuali Dashboard; chunk utama turun ke ±140 kB.
 - Accessibility: kontras teks, target sentuh, focus trap bottom sheet, skip link, safe area, reduced motion.
-- `public/_redirects` dan `public/_headers` untuk Cloudflare Pages/Netlify.
+- `wrangler.jsonc` dengan `not_found_handling: "single-page-application"` dan `public/_headers` untuk Cloudflare Workers.
 - `scripts/check-pwa.mjs` memvalidasi manifest, ikon, service worker, dan artefak deploy.
 - E2E produksi khusus PWA: manifest, ikon, service worker, reload offline, dan transaksi offline.
 - Dokumentasi `docs/UAT.md`, `docs/USER-GUIDE.md`, `docs/DEPLOY.md`, dan `docs/RELEASE.md`.
@@ -488,7 +488,8 @@ Catatan progres per fase. Dokumen ini melengkapi `docs/PHASES.md`: `PHASES.md` t
 - `tests/e2e/phase12.spec.ts`
 - `tests/e2e-pwa/phase12.spec.ts`
 - `playwright.pwa.config.ts`
-- `public/_redirects`
+- `wrangler.jsonc`
+- `netlify.toml`
 - `public/_headers`
 - `docs/RELEASE.md`
 
@@ -499,6 +500,7 @@ Catatan progres per fase. Dokumen ini melengkapi `docs/PHASES.md`: `PHASES.md` t
 - `npm run test:e2e:pwa` lulus: manifest, ikon, service worker aktif, reload offline, dan transaksi offline.
 - `npm run format:check` lulus.
 - `npm run build` menghasilkan chunk utama 140,25 kB (gzip 42,88 kB).
+- `npx wrangler deploy --dry-run` lulus dengan 115 asset; `npx wrangler dev` mengembalikan `/lainnya/uat` sebagai `200 text/html` (SPA fallback Workers).
 - Lighthouse 13.5.0 mobile: Performance **96**, Accessibility **100**, Best Practices **100**, SEO **100**; FCP 2,1 s, LCP 2,3 s, TBT 20 ms, CLS 0.
 - Audit pertama menemukan `aria-label` tanpa role pada progres onboarding dan loading form produk; keduanya diperbaiki dengan `role="group"`, lalu Accessibility naik dari 95 ke 100.
 - UAT perangkat, install Android/iOS, matriks perangkat, deploy produksi, dan sign-off masih menunggu.

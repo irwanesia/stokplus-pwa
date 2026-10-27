@@ -4,7 +4,7 @@
 
 | Item | Nilai |
 |---|---|
-| Versi dokumen | 2.0 |
+| Versi dokumen | 2.1 |
 | Status | Phase 12 — Review (menunggu UAT perangkat dan sign-off) |
 | Tanggal | 27 Oktober 2026 |
 | PRD acuan | `docs/PRD.md` v2.1 |
@@ -1176,7 +1176,7 @@ Kentang:
 
 | # | Keputusan | Default | Kapan |
 |---|---|---|---|
-| 1 | Hosting PWA | Cloudflare Pages/Netlify | Phase 1/12 |
+| 1 | Hosting PWA | Cloudflare Workers/Netlify | Phase 1/12 |
 | 2 | Cutover date migrasi | Tanggal migrasi | Phase 11 |
 | 3 | UAT date | Setelah Phase 11 | Phase 12 |
 | 4 | Biaya angkut default | 0 — **diputuskan Phase 5**, diisi manual per pembelian | Selesai Phase 5 |
@@ -1212,6 +1212,7 @@ Kentang:
 | 2026-10-27 | PHASES 1.17 | Phase 11 implementasi export Laravel dan import wizard StokPlus; gate aplikasi lulus, migrasi database Laravel aktual tidak diwajibkan sesuai keputusan product owner |
 | 2026-10-27 | PHASES 1.18 | Phase 11 `Done`; product owner mengarahkan lanjut ke Phase 12; Phase 12 `In progress` |
 | 2026-10-27 | PHASES 2.0 | Phase 12 implementasi PWA polish, UAT runner, panduan pengguna, deploy statis, dan dokumentasi rilis; 121 unit test, 30 E2E, 1 E2E PWA, dan Lighthouse 96 lulus; Phase 12 `Review` menunggu UAT perangkat dan sign-off |
+| 2026-10-27 | PHASES 2.1 | Perbaikan deploy Cloudflare Workers: `wrangler.jsonc` dengan SPA fallback, hapus `_redirects`, tambah `netlify.toml`; `check:pwa` memvalidasi config Worker dan menolak `_redirects` |
 
 ---
 
@@ -1340,7 +1341,7 @@ Kentang:
 1. Jalankan UAT 15 skenario di Android Chrome dan iPhone Safari menggunakan `docs/UAT.md` dan `/lainnya/uat`.
 2. Isi matriks perangkat, screenshot install/offline, dan bug log di `docs/RELEASE.md` serta `docs/UAT.md`.
 3. Verifikasi update prompt dengan dua deployment nyata dan pastikan data tetap ada.
-4. Deploy ke HTTPS (Cloudflare Pages default), lalu catat URL, versi, dan tanggal deploy.
+4. Deploy ke HTTPS (Cloudflare Workers default), lalu catat URL, versi, dan tanggal deploy.
 5. Setelah UAT ≥ 90%, tidak ada bug kritis, dan sign-off terisi, ubah Phase 12 menjadi `Done`.
 
 ---
