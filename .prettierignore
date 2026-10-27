@@ -1,0 +1,9 @@
+docs/
+node_modules/
+dist/
+coverage/
+playwright-report/
+playwright-report-pwa/
+test-results/
+public/icons/
+package-lock.json
